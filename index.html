@@ -254,9 +254,9 @@
 
     <form id="overForm">
       <div class="email-fields">
-        <input type="text" name="email_part1" placeholder="E-mail" required>
+        <input type="text" placeholder="E-mail" required>
         <span>@</span>
-        <input list="dominios" name="email_part2" placeholder="Domínio" required>
+        <input list="dominios" placeholder="Domínio" required>
         <datalist id="dominios">
           <option value="gmail.com">
           <option value="hotmail.com">
@@ -292,8 +292,8 @@
       </select>
 
       <div class="phone-fields">
-        <input type="tel" name="ddd" placeholder="DDD" required style="max-width: 80px;">
-        <input type="tel" name="phone_number" placeholder="Número" required>
+        <input type="tel" placeholder="DDD" required style="max-width: 80px;">
+        <input type="tel" placeholder="Número" required>
       </div>
 
       <button type="submit">QUERO SER AVISADO!</button>
@@ -305,22 +305,28 @@
 
     <footer>© OverDollar 2025</footer>
   </div>
+
   <script>
     document.getElementById("overForm").addEventListener("submit", async function (e) {
       e.preventDefault();
 
-      // Use FormData to get all form data automatically
-      const formData = new FormData(this);
+      const email = this.querySelector("input[placeholder='E-mail']").value;
+      const dominio = this.querySelector("input[placeholder='Domínio']").value;
+      const pais = this.querySelector("select").value;
+      const ddd = this.querySelector("input[placeholder='DDD']").value;
+      const numero = this.querySelector("input[placeholder='Número']").value;
+
+      const data = { email, dominio, pais, ddd, numero };
 
       try {
-        const response = await fetch("https://script.google.com/macros/s/AKfycbz8uP-KFfSCvU7wx2BG_hfxPikb-5evePhb89PpjdVZUxnMpvmi9ULCJtWdESUCgyyc/exec", {
+        // Endpoint do Vercel (mesmo deploy do site)
+        const response = await fetch("/api/submit-form", {
           method: "POST",
-          body: formData // Send FormData directly
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify(data)
         });
 
-        if (!response.ok) {
-          throw new Error("Erro no envio");
-        }
+        if (!response.ok) throw new Error("Erro no envio");
 
         alert("✅ Obrigado! Seus dados foram enviados com sucesso.");
         this.reset();
