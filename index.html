@@ -321,8 +321,7 @@
       try {
         const response = await fetch("https://script.google.com/macros/s/AKfycbz8uP-KFfSCvU7wx2BG_hfxPikb-5evePhb89PpjdVZUxnMpvmi9ULCJtWdESUCgyyc/exec", {
           method: "POST",
-          body: JSON.stringify(data),
-          headers: { "Content-Type": "application/json" }
+          body: JSON.stringify(data)
         });
 
         if (!response.ok) throw new Error("Erro no envio");
