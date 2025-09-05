@@ -254,9 +254,9 @@
 
     <form id="overForm">
       <div class="email-fields">
-        <input type="text" placeholder="E-mail" required>
+        <input type="text" name="email_part1" placeholder="E-mail" required>
         <span>@</span>
-        <input list="dominios" placeholder="Domínio" required>
+        <input list="dominios" name="email_part2" placeholder="Domínio" required>
         <datalist id="dominios">
           <option value="gmail.com">
           <option value="hotmail.com">
@@ -268,32 +268,13 @@
         </datalist>
       </div>
 
-      <select required>
+      <select name="country_code" required>
         <option value="" disabled selected>Selecione o País</option>
-        <option value="+54">Argentina (+54)</option>
-        <option value="+591">Bolívia (+591)</option>
-        <option value="+55">Brasil (+55)</option>
-        <option value="+56">Chile (+56)</option>
-        <option value="+57">Colômbia (+57)</option>
-        <option value="+506">Costa Rica (+506)</option>
-        <option value="+53">Cuba (+53)</option>
-        <option value="+1-809">República Dominicana (+1-809)</option>
-        <option value="+593">Equador (+593)</option>
-        <option value="+503">El Salvador (+503)</option>
-        <option value="+502">Guatemala (+502)</option>
-        <option value="+504">Honduras (+504)</option>
-        <option value="+52">México (+52)</option>
-        <option value="+505">Nicarágua (+505)</option>
-        <option value="+507">Panamá (+507)</option>
-        <option value="+595">Paraguai (+595)</option>
-        <option value="+51">Peru (+51)</option>
-        <option value="+598">Uruguai (+598)</option>
-        <option value="+58">Venezuela (+58)</option>
       </select>
 
       <div class="phone-fields">
-        <input type="tel" placeholder="DDD" required style="max-width: 80px;">
-        <input type="tel" placeholder="Número" required>
+        <input type="tel" name="ddd" placeholder="DDD" required style="max-width: 80px;">
+        <input type="tel" name="phone_number" placeholder="Número" required>
       </div>
 
       <button type="submit">QUERO SER AVISADO!</button>
@@ -305,26 +286,22 @@
 
     <footer>© OverDollar 2025</footer>
   </div>
-
   <script>
     document.getElementById("overForm").addEventListener("submit", async function (e) {
       e.preventDefault();
 
-      const email = this.querySelector("input[placeholder='E-mail']").value;
-      const dominio = this.querySelector("input[placeholder='Domínio']").value;
-      const pais = this.querySelector("select").value;
-      const ddd = this.querySelector("input[placeholder='DDD']").value;
-      const numero = this.querySelector("input[placeholder='Número']").value;
-
-      const data = { email, dominio, pais, ddd, numero };
+      // Use FormData to get all form data automatically
+      const formData = new FormData(this);
 
       try {
         const response = await fetch("https://script.google.com/macros/s/AKfycbz8uP-KFfSCvU7wx2BG_hfxPikb-5evePhb89PpjdVZUxnMpvmi9ULCJtWdESUCgyyc/exec", {
           method: "POST",
-          body: JSON.stringify(data)
+          body: formData // Send FormData directly
         });
 
-        if (!response.ok) throw new Error("Erro no envio");
+        if (!response.ok) {
+          throw new Error("Erro no envio");
+        }
 
         alert("✅ Obrigado! Seus dados foram enviados com sucesso.");
         this.reset();
