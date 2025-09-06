@@ -318,44 +318,26 @@
 
       const button = form.querySelector('button[type="submit"]');
       button.disabled = true; // Desabilita o botão para evitar múltiplos envios
-      button.textContent = 'Enviando...'; // Muda o texto do botão
+      button.textContent = 'Enviando...';
 
-      // Coleta os valores dos campos
-      const emailPart = form.querySelector('input[name="emailPart"]').value;
-      const dominio = form.querySelector('input[name="dominio"]').value;
-      const ddd = form.querySelector('input[name="ddd"]').value;
-      const numero = form.querySelector('input[name="numero"]').value;
+      // Coleta os dados do formulário no formato FormData
+      const formData = new FormData(form);
 
-      // Pega o texto completo da opção de país selecionada
+      // Para enviar o texto completo do país, vamos sobrescrever o valor
       const paisSelect = form.querySelector('select[name="pais"]');
-      const pais = paisSelect.options[paisSelect.selectedIndex].text;
-
-      // Cria um objeto com os dados para envio
-      const formData = {
-        emailPart: emailPart,
-        dominio: dominio,
-        pais: pais,
-        ddd: ddd,
-        numero: numero
-      };
-
-      // Usa URLSearchParams para formatar os dados para o Google Apps Script
-      const body = new URLSearchParams(formData).toString();
+      formData.set('pais', paisSelect.options[paisSelect.selectedIndex].text);
 
       try {
         const response = await fetch(WEB_APP_URL, {
           method: 'POST',
-          headers: {
-            'Content-Type': 'application/x-www-form-urlencoded'
-          },
-          body: body,
+          body: formData, // Envia o objeto FormData diretamente
         });
 
         if (response.ok) {
           const data = await response.json();
           if (data.status === 'success') {
             alert('✅ Obrigado! Seus dados foram enviados com sucesso.');
-            form.reset(); // Limpa o formulário após o sucesso
+            form.reset();
           } else {
             alert('❌ Ocorreu um erro ao enviar os dados. Tente novamente mais tarde.');
           }
@@ -366,8 +348,8 @@
         console.error('Erro:', error);
         alert('❌ Ocorreu um erro ao enviar os dados. Tente novamente mais tarde.');
       } finally {
-        button.disabled = false; // Reabilita o botão
-        button.textContent = 'QUERO SER AVISADO!'; // Volta o texto original
+        button.disabled = false;
+        button.textContent = 'QUERO SER AVISADO!';
       }
     });
   </script>
